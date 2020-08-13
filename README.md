@@ -3,6 +3,8 @@
 ![banner2](pics/banner-static.png)
 
 
+# see the tech demo's binary build at this itch.io link : [HERE](https://zikbakguru.itch.io/bjrtfx)
+
 :warning: Description
 ====
 This is the GameMaker 1 project source files of BJÖRTFX, that serves as an example of using a bundle of shader effects for achieving the emulation of retro, CRT-like screen effects to enhance the game's visual quality, and an utility that can be used to create & export images with such shader effects applied as well.
