@@ -1,0 +1,359 @@
+Converting GML script: ${project_dir}\scripts\iui_vtx\iui_vtx.gml
+Converted description /// @description iui_vtx(x, y)/// @param x
+/// @param  y
+
+Converting GML script: ${project_dir}\scripts\iui_vtx_col\iui_vtx_col.gml
+Converted description /// @description iui_vtx_col(x, y, colour, alpha)/// @param x
+/// @param  y
+/// @param  colour
+/// @param  alpha
+
+Converting GML script: ${project_dir}\scripts\iui_vtx_rect\iui_vtx_rect.gml
+Converted description /// @description iui_vtx_rect(x1, y1, x2, y2)/// @param x1
+/// @param  y1
+/// @param  x2
+/// @param  y2
+
+Converting GML script: ${project_dir}\scripts\iui_vtx_rect_col\iui_vtx_rect_col.gml
+Converted description /// @description iui_vtx_rect_col(x1, y1, x2, y2, colour, alpha)/// @param x1
+/// @param  y1
+/// @param  x2
+/// @param  y2
+/// @param  colour
+/// @param  alpha
+
+Converting GML script: ${project_dir}\scripts\iui_vtx_tri\iui_vtx_tri.gml
+Converted description /// @description iui_vtx_tri(x1, y1, x2, y2, x3, y3)/// @param x1
+/// @param  y1
+/// @param  x2
+/// @param  y2
+/// @param  x3
+/// @param  y3
+
+Converting GML script: ${project_dir}\scripts\iui_vtx_tri_col\iui_vtx_tri_col.gml
+Converted description /// @description iui_vtx_tri_col(x1, y1, x2, y2, x3, y3, colour)/// @param x1
+/// @param  y1
+/// @param  x2
+/// @param  y2
+/// @param  x3
+/// @param  y3
+/// @param  colour
+
+Converting GML script: ${project_dir}\scripts\iui_rect\iui_rect.gml
+Converted description /// @description iui_rect(x, y, w, h, colour)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  colour
+
+Converting GML script: ${project_dir}\scripts\iui_rect_alpha\iui_rect_alpha.gml
+Converted description /// @description iui_rect_alpha(x, y, w, h, colour, alpha)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  colour
+/// @param  alpha
+
+Converting GML script: ${project_dir}\scripts\iui_rect_pos\iui_rect_pos.gml
+Converted description /// @description iui_rect_pos(x1, y1, x2, y2, colour, alpha)/// @param x1
+/// @param  y1
+/// @param  x2
+/// @param  y2
+/// @param  colour
+/// @param  alpha
+
+Converting GML script: ${project_dir}\scripts\iui_rect_rot\iui_rect_rot.gml
+Converted description /// @description iui_rect_rot(x, y, w, h, colour, rot)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  colour
+/// @param  rot
+
+Converting GML script: ${project_dir}\scripts\iui_rect_rot_center\iui_rect_rot_center.gml
+Converted description /// @description iui_rect_rot_center(x, y, w, h, colour, rot)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  colour
+/// @param  rot
+
+Converting GML script: ${project_dir}\scripts\iui_rect_rot_origin\iui_rect_rot_origin.gml
+Converted description /// @description iui_rect_rot_origin(x, y, w, h, colour, rot, ox, oy)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  colour
+/// @param  rot
+/// @param  ox
+/// @param  oy
+
+Converting GML script: ${project_dir}\scripts\iui_button\iui_button.gml
+Converted description /// @description iui_button(x, y, w, h, string)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  string
+
+Converting GML script: ${project_dir}\scripts\iui_button_nodraw\iui_button_nodraw.gml
+Converted description /// @description iui_button_nodraw(x, y, w, h, string)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  string
+
+Converting GML script: ${project_dir}\scripts\iui_tab\iui_tab.gml
+Converted description /// @description iui_tab(x, y, w, h, array_of_string, tab_index, trim_mode)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  array_of_string
+/// @param  tab_index
+/// @param  trim_mode
+
+Converting GML script: ${project_dir}\scripts\iui_textbox\iui_textbox.gml
+Converted description /// @description iui_textbox(x, y, w, h, text, ID)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  text
+/// @param  ID
+Converted string - line 22: 'M' -> "M"
+Converted string - line 142: "\#" -> "\\#"
+
+Converting GML script: ${project_dir}\scripts\iui_textbox_numberonly\iui_textbox_numberonly.gml
+Converted description /// @description iui_textbox_numberonly(x, y, w, h, text, ID)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  text
+/// @param  ID
+Converted string - line 22: 'M' -> "M"
+Converted string - line 144: '-' -> "-"
+Converted string - line 147: '.' -> "."
+Converted string - line 149: '.' -> "."
+
+Converting GML script: ${project_dir}\scripts\iui_label\iui_label.gml
+Converted description /// @description iui_label(x, y, str, colour)/// @param x
+/// @param  y
+/// @param  str
+/// @param  colour
+
+Converting GML script: ${project_dir}\scripts\iui_label_alpha\iui_label_alpha.gml
+Converted description /// @description iui_label_alpha(x, y, str, colour, alpha)/// @param x
+/// @param  y
+/// @param  str
+/// @param  colour
+/// @param  alpha
+
+Converting GML script: ${project_dir}\scripts\iui_label_transform\iui_label_transform.gml
+Converted description /// @description iui_label_transform(x, y, str, xscale, yscale, rotation, colour, alpha)/// @param x
+/// @param  y
+/// @param  str
+/// @param  xscale
+/// @param  yscale
+/// @param  rotation
+/// @param  colour
+/// @param  alpha
+
+Converting GML script: ${project_dir}\scripts\iui_label_shadow\iui_label_shadow.gml
+Converted description /// @description iui_label_shadow(x, y, str, colour, sx, sy, shadowColour)/// @param x
+/// @param  y
+/// @param  str
+/// @param  colour
+/// @param  sx
+/// @param  sy
+/// @param  shadowColour
+
+Converting GML script: ${project_dir}\scripts\iui_label_underline_expensive\iui_label_underline_expensive.gml
+Converted description /// @description iui_label_underline_expensive(x, y, str, colour, line_thickness, line_offset_y, bg_colour)/// @param x
+/// @param  y
+/// @param  str
+/// @param  colour
+/// @param  line_thickness
+/// @param  line_offset_y
+/// @param  bg_colour
+Converted string - line 15: 'M' -> "M"
+
+Converting GML script: ${project_dir}\scripts\iui_label_underline\iui_label_underline.gml
+Converted description /// @description iui_label_underline(x, y, str, colour, line_thickness, line_offset_y)/// @param x
+/// @param  y
+/// @param  str
+/// @param  colour
+/// @param  line_thickness
+/// @param  line_offset_y
+Converted string - line 10: 'M' -> "M"
+
+Converting GML script: ${project_dir}\scripts\iui_label_ext\iui_label_ext.gml
+Converted description /// @description iui_label_ext(x, y, str, colour, alpha, sep, width)/// @param x
+/// @param  y
+/// @param  str
+/// @param  colour
+/// @param  alpha
+/// @param  sep
+/// @param  width
+
+Converting GML script: ${project_dir}\scripts\iui_slider_h\iui_slider_h.gml
+Converted description /// @description iui_slider_h(x, y, value, width, min, max, ID)/// @param x
+/// @param  y
+/// @param  value
+/// @param  width
+/// @param  min
+/// @param  max
+/// @param  ID
+
+Converting GML script: ${project_dir}\scripts\iui_slider_v\iui_slider_v.gml
+Converted description /// @description iui_slider_v(x, y, value, height, min, max, ID)/// @param x
+/// @param  y
+/// @param  value
+/// @param  height
+/// @param  min
+/// @param  max
+/// @param  ID
+
+Converting GML script: ${project_dir}\scripts\iui_sprite\iui_sprite.gml
+Converted description /// @description iui_sprite(sprite, sub, x, y, colour, alpha)/// @param sprite
+/// @param  sub
+/// @param  x
+/// @param  y
+/// @param  colour
+/// @param  alpha
+
+Converting GML script: ${project_dir}\scripts\iui_sprite_shadow\iui_sprite_shadow.gml
+Converted description /// @description iui_sprite_shadow(sprite, sub, x, y, colour, alpha, shadowOffX, shadowOffY, shadowColour)/// @param sprite
+/// @param  sub
+/// @param  x
+/// @param  y
+/// @param  colour
+/// @param  alpha
+/// @param  shadowOffX
+/// @param  shadowOffY
+/// @param  shadowColour
+
+Converting GML script: ${project_dir}\scripts\iui_checkbox\iui_checkbox.gml
+Converted description /// @description iui_checkbox(x, y, w, h, checked, id)/// @param x
+/// @param  y
+/// @param  w
+/// @param  h
+/// @param  checked
+/// @param  id
+
+Converting GML script: ${project_dir}\scripts\iui_reset\iui_reset.gml
+Converted description /// @description iui_reset()
+
+Converting GML script: ${project_dir}\scripts\iui_init\iui_init.gml
+Converted description /// @description iui_init()
+
+Converting GML script: ${project_dir}\scripts\iui_init_vars\iui_init_vars.gml
+Converted description /// @description iui_init_vars()
+Converted string - line 21: "ADJUST CRT. \#2" -> "ADJUST CRT. \\#2"
+
+Converting GML script: ${project_dir}\scripts\iui_trim_label\iui_trim_label.gml
+Converted description /// @description iui_trim_label( STR )/// @param  STR
+Converted string - line 14: '##' -> "##"
+
+Converting GML script: ${project_dir}\scripts\iui_trim_id\iui_trim_id.gml
+Converted description /// @description iui_trim_id( STR )/// @param  STR
+Converted string - line 14: '###' -> "###"
+
+Converting GML script: ${project_dir}\scripts\iui_align_push\iui_align_push.gml
+Converted description /// @description iui_align_push(halign, valign)/// @param halign
+/// @param  valign
+
+Converting GML script: ${project_dir}\scripts\iui_align_pop\iui_align_pop.gml
+Converted description /// @description iui_align_pop()
+
+Converting GML script: ${project_dir}\scripts\iui_align_center\iui_align_center.gml
+Converted description /// @description iui_align_center();
+
+Converting GML script: ${project_dir}\scripts\iui_get_all\iui_get_all.gml
+Converted description /// @description iui_str_get_all( STR )/// @param  STR
+
+Converting GML script: ${project_dir}\scripts\iui_get_id\iui_get_id.gml
+Converted description /// @description iui_get_id( STR )/// @param  STR
+
+Converting GML script: ${project_dir}\scripts\iui_get_label\iui_get_label.gml
+Converted description /// @description iui_get_label( STR )/// @param  STR
+Converted string - line 16: '##' -> "##"
+
+Converting GML script: ${project_dir}\scripts\iui_begin\iui_begin.gml
+Converted description /// @description iui_begin()
+
+Converting GML script: ${project_dir}\scripts\iui_end\iui_end.gml
+Converted description /// @description iui_end()
+
+Converting GML script: ${project_dir}\scripts\iui_update_io\iui_update_io.gml
+Converted description /// @description iui_update_io()
+
+Converting GML script: ${project_dir}\scripts\iui_col16\iui_col16.gml
+Converted description /// @description iui_col16( RRGGBB_HEX )/// @param  RRGGBB_HEX
+
+Converting GML script: ${project_dir}\scripts\iui_colLighter\iui_colLighter.gml
+Converted description /// @description iui_colLighter( colour, howmuch )/// @param  colour
+/// @param  howmuch
+
+Converting GML script: ${project_dir}\scripts\iui_colLighter_adv\iui_colLighter_adv.gml
+Converted description /// @description iui_colLighter_adv( colour, howmuch, rmod, gmod, bmod )/// @param  colour
+/// @param  howmuch
+/// @param  rmod
+/// @param  gmod
+/// @param  bmod
+
+Converting GML script: ${project_dir}\scripts\iui_strTrim\iui_strTrim.gml
+Converted description /// @description iui_strTrim(string, width)/// @param string
+/// @param  width
+Converted string - line 18: 'M' -> "M"
+
+Converting GML script: ${project_dir}\scripts\strTrim_nodots\strTrim_nodots.gml
+Converted description /// @description iui_strTrim_nodots(string, width)/// @param string
+/// @param  width
+Converted string - line 18: 'M' -> "M"
+
+Converting GML script: ${project_dir}\scripts\iui_pack\iui_pack.gml
+Converted description /// @description iui_pack(val1, val2, splöts prlrllllsshhh :D, ...)/// @param val1
+/// @param  val2
+/// @param  splöts prlrllllsshhh :D
+/// @param  ...
+
+Converting GML script: ${project_dir}\scripts\iui_shove\iui_shove.gml
+Converted description /// @description iui_shove( array, adsad, fjskhfsfkdg, qwiuriwefd, ... )/// @param  array
+/// @param  adsad
+/// @param  fjskhfsfkdg
+/// @param  qwiuriwefd
+/// @param  ...
+
+Converting GML script: ${project_dir}\scripts\iui_asciiShift\iui_asciiShift.gml
+Converted description /// @description iui_asciiShift(asciiCode)/// @param asciiCode
+
+Converting GML script: ${project_dir}\scripts\asciiUnShift\asciiUnShift.gml
+Converted description /// @description iui_asciiUnShift(asciiCode)/// @param asciiCode
+
+Font fntConsolas has been converted to font family Consolas (Bold Italic)
+GameMaker Studio 1 font texture has been backed up at ${project_dir}\fonts\fntConsolas\fntConsolas.gms1.png
+Converting GML script: ${project_dir}\objects\oKNT\Step_0.gml
+Converted description /// @description  Update window size
+
+Converting GML script: ${project_dir}\objects\oKNT\Draw_73.gml
+Converted description /// @description  Reset surface target
+
+Converting GML script: ${project_dir}\objects\oKNT\Draw_72.gml
+Converted description /// @description  Set surface target
+
+Converting GML script: ${project_dir}\objects\oKNT\Draw_64.gml
+Converted description /// @description  Draw screen surface with CRT effects
+
+Converting GML script: ${project_dir}\objects\oKNT\Draw_0.gml
+Converted description /// @description  Draw contents into the surface
+
+macOS icon ${options_dir}\mac\icons\icon512.png written out as 32-bit
+Windows NSIS Installer Script has been set to default due to changes in GameMaker Studio 2
+Game speed set to 60
+Added compatibility script 'background/background_add.gml'
+Added compatibility script 'background/background_delete.gml'
+Added compatibility script 'background/background_exists.gml'
+Added compatibility script 'background/background_get_height.gml'
+Added compatibility script 'background/background_get_width.gml'
+Added compatibility script 'background/draw_background_ext.gml'
+Added compatibility script 'texture/texture_set_interpolation.gml'
+Added compatibility script 'background/__init_background.gml'
+Added compatibility script '__init_global.gml'
