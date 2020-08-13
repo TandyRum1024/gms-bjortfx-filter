@@ -1,7 +1,6 @@
 :tv: BJÖRTFX : Shader based, CRT-like retro screen post-processing effect utility / example :tv:
 ====
 ![banner2](pics/banner-static.png)
-![banner](https://imgur.com/AjeKslg.gif)
 
 
 :warning: Description
@@ -10,7 +9,7 @@ This is the GameMaker 1 project source files of BJÖRTFX, that serves as an exam
 
 The effects shown here is originally made for [a post-jam graphical update of my latest game jam entry (click here to take a look)](https://zikbakguru.itch.io/jottel) and it has since been modified to have more controls over the effects.
 
-This example GameMaker 1 `.gmx` project folder (`retrofilter_example_project.gmx`) contains total of three shaders (plus an extra one for this trippy background effect that you can see in the footage above), for each rendering passes.
+This example GameMaker 1 `.gmx` project folder (`retrofilter_example_project.gmx`) contains total of three shaders (plus an extra one for this trippy background effect that you can see in the GIFs insdie the `/pics` folder), for each rendering passes.
 
 Using all three shaders will apply the following effects to the image :
 * Shadow mask & scanline effect
