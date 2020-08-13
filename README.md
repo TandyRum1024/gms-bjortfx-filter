@@ -1,7 +1,7 @@
 :tv: BJÖRTFX : Shader based, CRT-like retro screen post-processing effect utility / example :tv:
 ====
 ![banner2](pics/banner-static.png)
-![banner](pics/banner-optimize.gif)
+![banner](https://imgur.com/AjeKslg.gif)
 
 
 :warning: Description
