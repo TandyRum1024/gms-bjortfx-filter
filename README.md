@@ -53,7 +53,7 @@ The shadow mask effect is achieved by tinting (= multiplying the source colour w
 
 ![example](pics/shadowmask_after.png)
 
-This creates this peculiar alternating patterns of red, gree and blue that is commonly seen on the CRT screens.
+This creates this peculiar alternating patterns of red, green and blue that is commonly seen on the CRT screens.
 
 For the scanlines, I used a very similar method. But instead of using textures, I've used the screen's UV coordinates to calculate the vertically alternating pattern and used that for applying the scanlines.
 
