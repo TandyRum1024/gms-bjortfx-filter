@@ -22,7 +22,8 @@ Using all three shaders will apply the following effects to the image :
 * Contrast & Brightness adjustments
 * Horizontal blur / zoom blur-based glow effect, that can also be tinted to emulate the chromatic aberration effect.
 
-You could theoretically port this onto GameMaker 2 but since I don't have any GMS2 licenses at my disposal I can't test & gurantee you that it will be ported flawlessly.
+~~You could theoretically port this onto GameMaker 2 but since I don't have any GMS2 licenses at my disposal I can't test & gurantee you that it will be ported flawlessly.~~
+EDIT : Thanks to @dev-dwarf, the project has been FLAWLESSLY ported to GMS2!
 
 If you have any questions and problems regarding this project, feel free to contact me via my discord account : `zik#6629`... I'll try my best to help.
 
