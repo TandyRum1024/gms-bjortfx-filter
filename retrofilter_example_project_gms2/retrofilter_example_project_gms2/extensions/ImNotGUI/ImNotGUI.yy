@@ -1,0 +1,93 @@
+{
+    "id": "bd326e6e-c7db-4c58-8b89-e1e5ec2fcf40",
+    "modelName": "GMExtension",
+    "mvc": "1.2",
+    "name": "ImNotGUI",
+    "IncludedResources": [
+        "Sprites\\spr_uiwhitepixel",
+        "Sprites\\spr_uiwhitepixel1",
+        "Sprites\\spr_uicheck",
+        "Scripts\\IMNOTGUI\\DRAW\\VTX\\iui_vtx_begin",
+        "Scripts\\IMNOTGUI\\DRAW\\VTX\\iui_vtx",
+        "Scripts\\IMNOTGUI\\DRAW\\VTX\\iui_vtx_rect",
+        "Scripts\\IMNOTGUI\\DRAW\\VTX\\iui_vtx_tri",
+        "Scripts\\IMNOTGUI\\DRAW\\iui_rect",
+        "Scripts\\IMNOTGUI\\ELEMENT\\iui_button",
+        "Scripts\\IMNOTGUI\\ELEMENT\\iui_tab",
+        "Scripts\\IMNOTGUI\\ELEMENT\\iui_textbox",
+        "Scripts\\IMNOTGUI\\ELEMENT\\iui_label",
+        "Scripts\\IMNOTGUI\\ELEMENT\\iui_slider_h",
+        "Scripts\\IMNOTGUI\\ELEMENT\\iui_sprite",
+        "Scripts\\IMNOTGUI\\ELEMENT\\iui_checkbox",
+        "Scripts\\IMNOTGUI\\iui_reset",
+        "Scripts\\IMNOTGUI\\iui_init",
+        "Scripts\\IMNOTGUI\\iui_init_vars",
+        "Scripts\\IMNOTGUI\\iui_trim_label",
+        "Scripts\\IMNOTGUI\\iui_align_push",
+        "Scripts\\IMNOTGUI\\iui_get_all",
+        "Scripts\\IMNOTGUI\\iui_begin",
+        "Scripts\\IMNOTGUI\\iui_end",
+        "Scripts\\IMNOTGUI\\iui_update_io",
+        "Scripts\\IMNOTGUI\\iui_col16",
+        "Scripts\\IMNOTGUI\\iui_colLighter",
+        "Scripts\\IMNOTGUI\\iui_strTrim",
+        "Scripts\\IMNOTGUI\\iui_pack",
+        "Scripts\\IMNOTGUI\\iui_shove",
+        "Scripts\\IMNOTGUI\\iui_asciiShift",
+        "Scripts\\IMNOTGUI\\iui_style"
+    ],
+    "androidPermissions": [
+        
+    ],
+    "androidProps": true,
+    "androidactivityinject": "",
+    "androidclassname": "",
+    "androidinject": "",
+    "androidmanifestinject": "",
+    "androidsourcedir": "",
+    "author": "",
+    "classname": "",
+    "copyToTargets": 743440586,
+    "date": "2020-54-13 07:08:20",
+    "description": "",
+    "exportToGame": true,
+    "extensionName": "",
+    "files": [
+        
+    ],
+    "gradleinject": "",
+    "helpfile": "",
+    "installdir": "",
+    "iosProps": true,
+    "iosSystemFrameworkEntries": [
+        
+    ],
+    "iosThirdPartyFrameworkEntries": [
+        
+    ],
+    "iosdelegatename": "",
+    "iosplistinject": "",
+    "license": "Free to use, also for commercial games.",
+    "maccompilerflags": "",
+    "maclinkerflags": "",
+    "macsourcedir": "",
+    "options": null,
+    "optionsFile": "options.json",
+    "packageID": "",
+    "productID": "",
+    "sourcedir": "",
+    "supportedTargets": 743440586,
+    "tvosProps": false,
+    "tvosSystemFrameworkEntries": [
+        
+    ],
+    "tvosThirdPartyFrameworkEntries": [
+        
+    ],
+    "tvosclassname": "",
+    "tvosdelegatename": "",
+    "tvosmaccompilerflags": "",
+    "tvosmaclinkerflags": "",
+    "tvosplistinject": "",
+    "version": "66.66.66"
+}
