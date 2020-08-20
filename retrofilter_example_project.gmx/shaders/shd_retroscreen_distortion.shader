@@ -49,7 +49,7 @@ uniform vec2 uNoiseTexelSize;   // size of single texel on noise texture
 // Samples noise and returns float with range of [0..1]
 float noise (vec2 uv)
 {
-    return texture2D(uTexNoise, fract(uv / uScreenTexelSize * uNoiseTexelSize + vec2(uTime * 32.0))).r;
+    return texture2D(uTexNoise, fract(floor(uv / uScreenTexelSize) * uNoiseTexelSize + vec2(uTime * 32.0))).r;
 }
 
 // Applies power curve for contrast of value

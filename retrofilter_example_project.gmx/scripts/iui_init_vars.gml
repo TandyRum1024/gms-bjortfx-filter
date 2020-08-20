@@ -22,7 +22,7 @@ UI_TAB_ELEMENTS = iui_pack("MAIN", "ADJUST CRT.", "ADJUST CRT. \#2", "ADJUST POS
 UI_TAB_IDX = 0;
 
 /// UI vars
-
+UI_DOWNSCALE_FACTOR = "0";
 
 /// Style override
 UI_BASE_COL = iui_colLighter(iui_col16($252427), -5);

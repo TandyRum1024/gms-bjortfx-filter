@@ -394,7 +394,7 @@ if (mustTrim)
 
 iui_align_push(fa_left, fa_middle);
 
-iui_label(bx + 10, by + (bh >> 1), trimText, textColour);
+iui_label_transform(bx + 10, by + (bh >> 1), trimText, 1, 1, 0, iuCream, textColour);
 
 // Fading 3 chars for trimming
 var textEndX = string_width(string_copy(currentText, 1, displayChars - 1));

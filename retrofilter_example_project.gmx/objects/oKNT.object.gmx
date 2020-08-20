@@ -30,60 +30,23 @@
     ZIK@MMXX
 */
 
-var _shaderok = shader_is_compiled(shd_retroscreen_screenfilter);
-_shaderok &amp;= shader_is_compiled(shd_retroscreen_distortion);
-_shaderok &amp;= shader_is_compiled(shd_retroscreen_postprocessing);
-_shaderok &amp;= shader_is_compiled(shd_misc_bg);
-
-if (!_shaderok)
-{
-    show_message("Whoops, seems like the program has failed to compile the shaders...#This program requires a graphics card that supports Shaders!#(You could also, install / update your DirectX drivers and try again to see if it works.)");
-    game_end();
-}
-
 /// Window settings
 winWid = 800;
 winHei = 600;
 winTargetW = 800;
 winTargetH = 600;
 
-/// Shader parameters
-// CRT emulation
-crtDistortion = 0.25; // screen distortion intensity
-crtReflection = 0.3; // border reflection intensity
-crtShadowmask = 0.4; // shadow mask intensity
-crtScanline   = 0.6; // scanline intensity
-crtBleed      = 0.35; // bleed intensity
-crtBleedSize  = 64; // bleed size
-crtTint       = 0.1; // dynamic colour tint intensity
-crtVignette   = 0.1; // vignette intensity
-crtFilmgrain  = 0.1; // film grain intensity
-crtBrightness = 0.23; // brightness boost/adjustment
-crtContrast   = 1.0; // contrast adjustment
+/// Create shader FX handler
+instance_create(0, 0, oBJORTFX);
 
-// Specular light
-// specular light colour
-crtSpecularR = 0.9;
-crtSpecularG = 0.75;
-crtSpecularB = 1.0;
-// crtSpecularCol = c_white;
-crtSpecularAmp  = 0.1; // specular light amplitude/alpha
-crtSpecularOffX = 0.2; // specular light offset x
-crtSpecularOffY = -0.2; // specular light offset y
-
-// Final postprocessing FX
-crtGlowFactor   = 0.75; // factor/multiplier of glow (hard-capped at certain amount)
-crtGlowTint     = 0.75; // colour tint amount of blur (like chromatic aberration)
-crtBlurSize     = 8; // half size of blur
-crtBlurZoom     = 0.3; // zoom amount of blur
-
-/// Surfaces
-surfaceScreenWid = winWid;
-surfaceScreenHei = winHei;
-surfaceScreen  = surface_create(surfaceScreenWid, surfaceScreenHei); // screen surface that will get the effects applied
-surfacePPTemp1 = surface_create(surfaceScreenWid, surfaceScreenHei); // temp. surface to hold the result of pass 1
-surfacePPTemp2 = surface_create(surfaceScreenWid, surfaceScreenHei); // temp. surface to hold the result of pass 2
-surfacePPTemp3 = surface_create(surfaceScreenWid, surfaceScreenHei); // temp. surface to hold the result of pass 3
+/// Check for shader compatibility
+var _shaderok = oBJORTFX.filterSupported;
+_shaderok &amp;= shader_is_compiled(shd_misc_bg);
+if (!_shaderok)
+{
+    show_message("Whoops, seems like the program has failed to compile the shaders...#This program requires a graphics card that supports Shaders!#(You could also, install / update your DirectX drivers and try again to see if it works.)");
+    game_end();
+}
 
 /// State of the demo
 enum eDEMO_STATE
@@ -131,79 +94,30 @@ draw_set_font(fntConsolas);
             <string>/// Update window size
 var _winwid = window_get_width();
 var _winhei = window_get_height();
-if ((_winwid != surfaceScreenWid ||
-    _winhei != surfaceScreenHei) &amp;&amp;
+if ((_winwid != winWid ||
+    _winhei != winHei) &amp;&amp;
     _winwid != 0 &amp;&amp;
     _winhei != 0)
 {
+    // Update window resolution and UI scale
     winWid = _winwid;
     winHei = _winhei;
-    surfaceScreenWid = _winwid;
-    surfaceScreenHei = _winhei;
-    
     UIScale = clamp(winWid / winTargetW, 1.0, winHei / winTargetH);
     
-    // Resize the application surface
+    // Update the filter handler's resolutions
+    oBJORTFX.surfaceScreenWid = _winwid;
+    oBJORTFX.surfaceScreenHei = _winhei;
+    oBJORTFX.surfaceDownscaledWid = _winwid &gt;&gt; oBJORTFX.surfaceDownscaleFactor;
+    oBJORTFX.surfaceDownscaledHei = _winhei &gt;&gt; oBJORTFX.surfaceDownscaleFactor;
+    
+    // Resize the application surface &amp; view
     surface_resize(application_surface, winWid, winHei);
+    display_set_gui_size(winWid, winHei);
+    view_wview[view_current] = winWid;
+    view_hview[view_current] = winHei;
+    view_wport[view_current] = winWid;
+    view_hport[view_current] = winHei;
 }
-
-</string>
-          </argument>
-        </arguments>
-      </action>
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>/// Update surfaces
-if (!surface_exists(surfaceScreen) ||
-    surface_get_width(surfaceScreen) != surfaceScreenWid ||
-    surface_get_height(surfaceScreen) != surfaceScreenHei)
-{
-    if (surface_exists(surfaceScreen))
-        surface_free(surfaceScreen);
-    surfaceScreen = surface_create(surfaceScreenWid, surfaceScreenHei);
-}
-
-if (!surface_exists(surfacePPTemp1) ||
-    surface_get_width(surfacePPTemp1) != surfaceScreenWid ||
-    surface_get_height(surfacePPTemp1) != surfaceScreenHei)
-{
-    if (surface_exists(surfacePPTemp1))
-        surface_free(surfacePPTemp1);
-    surfacePPTemp1 = surface_create(surfaceScreenWid, surfaceScreenHei);
-}
-
-if (!surface_exists(surfacePPTemp2) ||
-    surface_get_width(surfacePPTemp2) != surfaceScreenWid ||
-    surface_get_height(surfacePPTemp2) != surfaceScreenHei)
-{
-    if (surface_exists(surfacePPTemp2))
-        surface_free(surfacePPTemp2);
-    surfacePPTemp2 = surface_create(surfaceScreenWid, surfaceScreenHei);
-}
-
-if (!surface_exists(surfacePPTemp3) ||
-    surface_get_width(surfacePPTemp3) != surfaceScreenWid ||
-    surface_get_height(surfacePPTemp3) != surfaceScreenHei)
-{
-    if (surface_exists(surfacePPTemp3))
-        surface_free(surfacePPTemp3);
-    surfacePPTemp3 = surface_create(surfaceScreenWid, surfaceScreenHei);
-}
-
 
 </string>
           </argument>
@@ -228,8 +142,6 @@ if (!surface_exists(surfacePPTemp3) ||
             <string>/// Update UI
 iui_update_io();
 
-// iuiSliderHWid = 8 * UIScale;
-// iuiSliderHHei = 16 * UIScale;
 if (UIMsgCtr &gt; 0)
     UIMsgCtr--;
 </string>
@@ -237,265 +149,7 @@ if (UIMsgCtr &gt; 0)
         </arguments>
       </action>
     </event>
-    <event eventtype="8" enumb="73">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>/// Reset surface target
-surface_reset_target();
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="8" enumb="72">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>/// Set surface target
-surface_set_target(surfaceScreen);
-draw_clear(c_black);
-
-switch (demoState)
-{
-    case eDEMO_STATE.DEFAULT:
-        demoBGCurrent = demoBGList[@ demoBGIdx];
-        
-        if (!background_exists(demoBGCurrent))
-        {
-            // Draw background
-            var _tex_bayer = sprite_get_texture(texBluenoise, 0);
-            
-            shader_set(shd_misc_bg);
-            
-            // Set uniform
-            var _u_time = shader_get_uniform(shd_misc_bg, "uTime");
-            var _u_resolution = shader_get_uniform(shd_misc_bg, "uScreenResolution");
-            var _samp_bayer = shader_get_sampler_index(shd_misc_bg, "uBayer");
-            shader_set_uniform_f(_u_time, current_time * 0.001);
-            shader_set_uniform_f(_u_resolution, surfaceScreenWid, surfaceScreenHei);
-            texture_set_stage(_samp_bayer, _tex_bayer);
-            
-            // Draw primitive : fullscreen quad for shader based background
-            draw_primitive_begin_texture(pr_trianglestrip, -1);
-            draw_vertex_texture(0, 0, 0, 0);
-            draw_vertex_texture(surfaceScreenWid, 0, 1, 0);
-            draw_vertex_texture(0, surfaceScreenHei, 0, 1);
-            draw_vertex_texture(surfaceScreenWid, surfaceScreenHei, 1, 1);
-            draw_primitive_end();
-            shader_reset();
-            
-            // Draw logo
-            var _logot = current_time * 0.001 * pi;
-            var _logoscale = 2.0 * UIScale;
-            var _logooscampx = surfaceScreenWid * 0.5;
-            var _logooscampy = surfaceScreenHei * 0.5;
-            var _logox = (surfaceScreenWid + cos(_logot) * _logooscampx) * 0.5;
-            var _logoy = (surfaceScreenHei - sin(_logot) * _logooscampy - sprite_get_height(sprLogo) * _logoscale) * 0.5;
-            draw_sprite_ext(sprLogo, 0, _logox + 16, _logoy + 16, _logoscale, _logoscale, sin(_logot) * 4, c_black, 0.5);
-            draw_sprite_ext(sprLogo, 0, _logox, _logoy, _logoscale, _logoscale, sin(_logot) * 4, c_white, 1.0);
-        }
-        break;
-}
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="8" enumb="64">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>/// Draw screen surface with CRT effects
-var _time = current_time * 0.001;
-
-/// Fetch the texture handles
-var _texnoise = sprite_get_texture(texBluenoise, 0);
-var _texshadowmask = sprite_get_texture(texShadowMask, 0);
-var _texrainbowlut = sprite_get_texture(texRainbowLUT, 0);
-// (also fetch the texel size of texture)
-var _texnoisetexelw = texture_get_texel_width(_texnoise);
-var _texnoisetexelh = texture_get_texel_height(_texnoise);
-var _texshadowmasktexelw = texture_get_texel_width(_texshadowmask);
-var _texshadowmasktexelh = texture_get_texel_height(_texshadowmask);
-
-/// Set texture interpolation
-texture_set_interpolation(true);
-
-
-/// Pass #1 : Screen filter (shadowmask, scanline etc..)
-// Feed the results into the temp. surface #1
-var _surfw = surface_get_width(surfaceScreen);
-var _surfh = surface_get_height(surfaceScreen);
-surface_set_target(surfacePPTemp1);
-
-// Set the shader
-shader_set(shd_retroscreen_screenfilter);
-
-// Prepare the uniforms
-var _u_time                 = shader_get_uniform(shd_retroscreen_screenfilter, "uTime");
-var _u_shadowmaskintensity  = shader_get_uniform(shd_retroscreen_screenfilter, "uShadowmaskIntensity");
-var _u_scanlineintensity    = shader_get_uniform(shd_retroscreen_screenfilter, "uScanlineIntensity");
-var _u_bleendintensity      = shader_get_uniform(shd_retroscreen_screenfilter, "uBleedIntensity");
-var _u_bleendsize           = shader_get_uniform(shd_retroscreen_screenfilter, "uBleedSize");
-var _u_tintintensity        = shader_get_uniform(shd_retroscreen_screenfilter, "uTintIntensity");
-var _u_vignetteintensity    = shader_get_uniform(shd_retroscreen_screenfilter, "uVignetteIntensity");
-var _u_grainintensity       = shader_get_uniform(shd_retroscreen_screenfilter, "uFilmgrainIntensity");
-var _u_brightness           = shader_get_uniform(shd_retroscreen_screenfilter, "uBrightness");
-var _u_contrast             = shader_get_uniform(shd_retroscreen_screenfilter, "uContrast");
-var _u_screentexelsize      = shader_get_uniform(shd_retroscreen_screenfilter, "uScreenTexelSize");
-var _u_noisetexelsize       = shader_get_uniform(shd_retroscreen_screenfilter, "uNoiseTexelSize");
-var _u_shadowmasktexelsize  = shader_get_uniform(shd_retroscreen_screenfilter, "uShadowmaskTexelSize");
-var _samp_noise      = shader_get_sampler_index(shd_retroscreen_screenfilter, "uTexNoise");
-var _samp_shadowmask = shader_get_sampler_index(shd_retroscreen_screenfilter, "uTexShadowmask");
-shader_set_uniform_f(_u_time, _time); // time
-shader_set_uniform_f(_u_shadowmaskintensity, crtShadowmask); // intensity of shadow mask effect
-shader_set_uniform_f(_u_scanlineintensity, crtScanline); // intensity of scanline
-shader_set_uniform_f(_u_bleendintensity, crtBleed); // intensity of colour bleed
-shader_set_uniform_f(_u_bleendsize, crtBleedSize); // size of colour bleed
-shader_set_uniform_f(_u_tintintensity, crtTint); // intensity of dynamic colour tint
-shader_set_uniform_f(_u_vignetteintensity, crtVignette); // intensity of vignette
-shader_set_uniform_f(_u_grainintensity, crtFilmgrain); // intensity of film grain
-shader_set_uniform_f(_u_brightness, crtBrightness); // brightness boost adjustment
-shader_set_uniform_f(_u_contrast, crtContrast); // contrast adjustment
-shader_set_uniform_f(_u_screentexelsize, 1 / _surfw, 1 / _surfh); // texel size on surface that's being drawn
-shader_set_uniform_f(_u_noisetexelsize, _texnoisetexelw, _texnoisetexelh); // texel size of noise texture
-shader_set_uniform_f(_u_shadowmasktexelsize, _texshadowmasktexelw, _texshadowmasktexelh); // texel size of shadow mask texture
-texture_set_stage(_samp_noise, _texnoise); // noise texture
-texture_set_stage(_samp_shadowmask, _texshadowmask); // shadow mask texture
-
-// Draw surface
-draw_surface(surfaceScreen, 0, 0);
-
-// Reset shader
-shader_reset();
-surface_reset_target();
-
-
-/// Pass #2 : CRT Screen distortion + Border reflection
-// Feed the results into the temp. surface #2
-var _surfw = surface_get_width(surfacePPTemp1);
-var _surfh = surface_get_height(surfacePPTemp1);
-surface_set_target(surfacePPTemp2);
-
-// Set the shader
-shader_set(shd_retroscreen_distortion);
-// Prepare the uniforms
-var _u_time                 = shader_get_uniform(shd_retroscreen_distortion, "uTime");
-var _u_distortionintensity  = shader_get_uniform(shd_retroscreen_distortion, "uScreenDistortIntensity");
-var _u_reflectionintensity  = shader_get_uniform(shd_retroscreen_distortion, "uBorderReflectionIntensity");
-var _u_specularcol          = shader_get_uniform(shd_retroscreen_distortion, "uSpecularLight");
-var _u_specularpos          = shader_get_uniform(shd_retroscreen_distortion, "uSpecularLightOffset");
-var _u_screentexelsize      = shader_get_uniform(shd_retroscreen_distortion, "uScreenTexelSize");
-var _u_noisetexelsize       = shader_get_uniform(shd_retroscreen_distortion, "uNoiseTexelSize");
-var _samp_noise             = shader_get_sampler_index(shd_retroscreen_distortion, "uTexNoise");
-shader_set_uniform_f(_u_time, _time); // time
-shader_set_uniform_f(_u_distortionintensity, crtDistortion); // screen distortion intensity
-shader_set_uniform_f(_u_reflectionintensity, crtReflection); // border reflection intensity
-
-// var _specr = (crtSpecularCol &amp; $0000FF), _specg = (crtSpecularCol &amp; $00FF00) &gt;&gt; 8, _specb = (crtSpecularCol &amp; $FF0000) &gt;&gt; 16;
-// shader_set_uniform_f(_u_specularcol, _specr / 255, _specg / 255, _specb / 255, crtSpecularAmp);
-shader_set_uniform_f(_u_specularcol, crtSpecularR, crtSpecularG, crtSpecularB, crtSpecularAmp); // specular light colour properties (in vec4 format, rgb colour [in 0..1 range] with intensity)
-shader_set_uniform_f(_u_specularpos, crtSpecularOffX, crtSpecularOffY); // specular light's offset from center
-shader_set_uniform_f(_u_screentexelsize, 1 / _surfw, 1 / _surfh); // texel size on surface that's being drawn
-shader_set_uniform_f(_u_noisetexelsize, _texnoisetexelw, _texnoisetexelh); // texel size of noise texture
-texture_set_stage(_samp_noise, _texnoise); // noise texture
-
-// Draw surface
-draw_surface(surfacePPTemp1, 0, 0);
-
-// Reset shader
-shader_reset();
-surface_reset_target();
-
-
-/// Pass #3 : (final postprocessing effects) zoom blur with chromatic abberation
-var _surfw = surface_get_width(surfacePPTemp2);
-var _surfh = surface_get_height(surfacePPTemp2);
-var _winw = window_get_width();
-var _winh = window_get_height();
-
-surface_set_target(surfacePPTemp3);
-draw_clear(c_black);
-
-// Set the shader
-shader_set(shd_retroscreen_postprocessing);
-// Prepare the uniforms
-var _u_time             = shader_get_uniform(shd_retroscreen_postprocessing, "uTime");
-var _u_glowfactor       = shader_get_uniform(shd_retroscreen_postprocessing, "uGlowFactor");
-var _u_glowtint         = shader_get_uniform(shd_retroscreen_postprocessing, "uGlowTintIntensity");
-var _u_blursize         = shader_get_uniform(shd_retroscreen_postprocessing, "uBlurSize");
-var _u_blurzoom         = shader_get_uniform(shd_retroscreen_postprocessing, "uBlurZoomIntensity");
-var _u_screentexelsize  = shader_get_uniform(shd_retroscreen_postprocessing, "uScreenTexelSize");
-var _u_noisetexelsize   = shader_get_uniform(shd_retroscreen_postprocessing, "uNoiseTexelSize");
-var _samp_noise         = shader_get_sampler_index(shd_retroscreen_postprocessing, "uTexNoise");
-var _samp_rainbowlut    = shader_get_sampler_index(shd_retroscreen_postprocessing, "uTexRainbow");
-shader_set_uniform_f(_u_time, _time); // time
-shader_set_uniform_f(_u_glowfactor, crtGlowFactor); // factor/multiplier of glow (hard-capped at certain amount)
-shader_set_uniform_f(_u_glowtint, crtGlowTint); // colour tint amount of blur (like chromatic aberration)
-shader_set_uniform_f(_u_blursize, crtBlurSize); // half size of blur
-shader_set_uniform_f(_u_blurzoom, crtBlurZoom); // zoom amount of blur
-shader_set_uniform_f(_u_screentexelsize, 1 / _surfw, 1 / _surfh); // texel size on surface that's being drawn
-shader_set_uniform_f(_u_noisetexelsize, _texnoisetexelw, _texnoisetexelh); // texel size of noise texture
-texture_set_stage(_samp_noise, _texnoise); // noise texture
-texture_set_stage(_samp_rainbowlut, _texrainbowlut); // RGB tint lookup texture
-
-// Draw surface
-draw_surface_stretched(surfacePPTemp2, 0, 0, surface_get_width(surfacePPTemp3), surface_get_height(surfacePPTemp3));
-
-// Reset shader
-shader_reset();
-surface_reset_target();
-
-// Draw the resulting surface
-draw_surface_stretched(surfacePPTemp3, 0, 0, _winw, _winh);
-
-/// Reset texture interpolation
-texture_set_interpolation(false);
-
-</string>
-          </argument>
-        </arguments>
-      </action>
+    <event eventtype="8" enumb="75">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -658,21 +312,37 @@ switch (UI_TAB_IDX)
         iui_align_push(fa_right, fa_middle);
         iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "DISTORTION ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtDistortion = iui_slider_h(_sliderx1, _UI_CURRENT_Y, crtDistortion, _sliderw, -1, 2, "DISTORTION");
+        oBJORTFX.crtDistortion = iui_slider_h(_sliderx1, _UI_CURRENT_Y, oBJORTFX.crtDistortion, _sliderw, -1, 2, "DISTORTION");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // reflection intensity
         iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "REFLECTION ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtReflection = iui_slider_h(_sliderx1, _UI_CURRENT_Y, crtReflection, _sliderw, 0, 1, "REFLECTION");
+        oBJORTFX.crtReflection = iui_slider_h(_sliderx1, _UI_CURRENT_Y, oBJORTFX.crtReflection, _sliderw, 0, 1, "REFLECTION");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // shadow mask intensity
         iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "SHADOWMASK ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtShadowmask = iui_slider_h(_sliderx1, _UI_CURRENT_Y, crtShadowmask, _sliderw, 0, 1, "SHADOWMASK");
+        oBJORTFX.crtShadowmask = iui_slider_h(_sliderx1, _UI_CURRENT_Y, oBJORTFX.crtShadowmask, _sliderw, 0, 1, "SHADOWMASK");
+        _UI_CURRENT_Y += _UI_MARGIN;
+        
+        // downscale factor intensity
+        var _tb_height = iuiSliderHHei + 8;
+        iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "DOWNSCALE ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
+        _UI_CURRENT_Y += 8 * UIScale;
+        UI_DOWNSCALE_FACTOR = iui_textbox_numberonly(_sliderx1, _UI_CURRENT_Y - _tb_height * 0.5, _sliderw, _tb_height, UI_DOWNSCALE_FACTOR, "DOWNSCALE");
         _UI_CURRENT_Y += _UI_MARGIN;
         // iui_align_pop();
+        
+        /// (update values)
+        var _input_factor = floor(real(UI_DOWNSCALE_FACTOR));
+        if (_input_factor != oBJORTFX.surfaceDownscaleFactor)
+        {
+            oBJORTFX.surfaceDownscaleFactor = _input_factor;
+            oBJORTFX.surfaceDownscaledWid = max(oBJORTFX.surfaceScreenWid &gt;&gt; _input_factor, 1);
+            oBJORTFX.surfaceDownscaledHei = max(oBJORTFX.surfaceScreenHei &gt;&gt; _input_factor, 1);
+        }
         
         /// 2nd column
         _UI_CURRENT_Y = _UI_CONTENT_Y + _UI_MARGIN2;
@@ -681,26 +351,26 @@ switch (UI_TAB_IDX)
         // iui_align_push(fa_right, fa_middle);
         iui_label_transform(_sliderx2, _UI_CURRENT_Y + _sliderhalfh, "SCANLINE ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtScanline = iui_slider_h(_sliderx2, _UI_CURRENT_Y, crtScanline, _sliderw, 0, 1, "SCANLINE");
+        oBJORTFX.crtScanline = iui_slider_h(_sliderx2, _UI_CURRENT_Y, oBJORTFX.crtScanline, _sliderw, 0, 1, "SCANLINE");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // colour bleed
         iui_label_transform(_sliderx2, _UI_CURRENT_Y + _sliderhalfh, "BLEED AMP. ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtBleed = iui_slider_h(_sliderx2, _UI_CURRENT_Y, crtBleed, _sliderw, 0, 1, "BLEED_AMP");
+        oBJORTFX.crtBleed = iui_slider_h(_sliderx2, _UI_CURRENT_Y, oBJORTFX.crtBleed, _sliderw, 0, 1, "BLEED_AMP");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // colour bleed size
         iui_label_transform(_sliderx2, _UI_CURRENT_Y + _sliderhalfh, "BLEED SZ. ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtBleedSize = iui_slider_h(_sliderx2, _UI_CURRENT_Y, crtBleedSize, _sliderw, -128, 128, "BLEED_SZ");
+        oBJORTFX.crtBleedSize = iui_slider_h(_sliderx2, _UI_CURRENT_Y, oBJORTFX.crtBleedSize, _sliderw, -128, 128, "BLEED_SZ");
         _UI_CURRENT_Y += _UI_MARGIN;
         // iui_align_pop();
         
         // dynamic colour tint
         iui_label_transform(_sliderx2, _UI_CURRENT_Y + _sliderhalfh, "COL. TINT ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtTint = iui_slider_h(_sliderx2, _UI_CURRENT_Y, crtTint, _sliderw, 0, 1, "TINT_AMP");
+        oBJORTFX.crtTint = iui_slider_h(_sliderx2, _UI_CURRENT_Y, oBJORTFX.crtTint, _sliderw, 0, 1, "TINT_AMP");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         /// 3nd column
@@ -709,13 +379,13 @@ switch (UI_TAB_IDX)
         // vignette
         iui_label_transform(_sliderx3, _UI_CURRENT_Y + _sliderhalfh, "VIGNETTE ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtVignette = iui_slider_h(_sliderx3, _UI_CURRENT_Y, crtVignette, _sliderw, 0, 1, "VIGNETTE");
+        oBJORTFX.crtVignette = iui_slider_h(_sliderx3, _UI_CURRENT_Y, oBJORTFX.crtVignette, _sliderw, 0, 1, "VIGNETTE");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // film grain
         iui_label_transform(_sliderx3, _UI_CURRENT_Y + _sliderhalfh, "Film grain ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtFilmgrain = iui_slider_h(_sliderx3, _UI_CURRENT_Y, crtFilmgrain, _sliderw, 0, 1, "FILMGRAIN");
+        oBJORTFX.crtFilmgrain = iui_slider_h(_sliderx3, _UI_CURRENT_Y, oBJORTFX.crtFilmgrain, _sliderw, 0, 1, "FILMGRAIN");
         _UI_CURRENT_Y += _UI_MARGIN;
         iui_align_pop();
         break;
@@ -752,13 +422,13 @@ switch (UI_TAB_IDX)
         iui_align_push(fa_right, fa_middle);
         iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "BRIGHTNESS ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtBrightness = iui_slider_h(_sliderx1, _UI_CURRENT_Y, crtBrightness, _sliderw, -1, 2, "BRIGHTNESS");
+        oBJORTFX.crtBrightness = iui_slider_h(_sliderx1, _UI_CURRENT_Y, oBJORTFX.crtBrightness, _sliderw, -1, 2, "BRIGHTNESS");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // contrast
         iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "CONTRAST ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtContrast = iui_slider_h(_sliderx1, _UI_CURRENT_Y, crtContrast, _sliderw, 0, 2, "CONTRAST");
+        oBJORTFX.crtContrast = iui_slider_h(_sliderx1, _UI_CURRENT_Y, oBJORTFX.crtContrast, _sliderw, 0, 2, "CONTRAST");
         _UI_CURRENT_Y += _UI_MARGIN;
         iui_align_pop();
         
@@ -773,25 +443,25 @@ switch (UI_TAB_IDX)
         iui_align_push(fa_right, fa_middle);
         iui_label_transform(_sliderx2, _UI_CURRENT_Y + _sliderhalfh, "R ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtSpecularR = iui_slider_h(_sliderx2, _UI_CURRENT_Y, crtSpecularR, _sliderw, 0, 1, "RED");
+        oBJORTFX.crtSpecularR = iui_slider_h(_sliderx2, _UI_CURRENT_Y, oBJORTFX.crtSpecularR, _sliderw, 0, 1, "RED");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // green
         iui_label_transform(_sliderx2, _UI_CURRENT_Y + _sliderhalfh, "G ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtSpecularG = iui_slider_h(_sliderx2, _UI_CURRENT_Y, crtSpecularG, _sliderw, 0, 1, "GRN");
+        oBJORTFX.crtSpecularG = iui_slider_h(_sliderx2, _UI_CURRENT_Y, oBJORTFX.crtSpecularG, _sliderw, 0, 1, "GRN");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // blue
         iui_label_transform(_sliderx2, _UI_CURRENT_Y + _sliderhalfh, "B ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtSpecularB = iui_slider_h(_sliderx2, _UI_CURRENT_Y, crtSpecularB, _sliderw, 0, 1, "BLU");
+        oBJORTFX.crtSpecularB = iui_slider_h(_sliderx2, _UI_CURRENT_Y, oBJORTFX.crtSpecularB, _sliderw, 0, 1, "BLU");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // amplitude
         iui_label_transform(_sliderx2, _UI_CURRENT_Y + _sliderhalfh, "AMP. ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtSpecularAmp = iui_slider_h(_sliderx2, _UI_CURRENT_Y, crtSpecularAmp, _sliderw, 0, 1, "SPECULAR_AMP");
+        oBJORTFX.crtSpecularAmp = iui_slider_h(_sliderx2, _UI_CURRENT_Y, oBJORTFX.crtSpecularAmp, _sliderw, 0, 1, "SPECULAR_AMP");
         _UI_CURRENT_Y += _UI_MARGIN;
         // iui_align_pop();
         
@@ -802,13 +472,13 @@ switch (UI_TAB_IDX)
         // iui_align_push(fa_right, fa_middle);
         iui_label_transform(_sliderx3, _UI_CURRENT_Y + _sliderhalfh, "X OFF. ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtSpecularOffX = iui_slider_h(_sliderx3, _UI_CURRENT_Y, crtSpecularOffX, _sliderw, -1, 1, "SPECULAR_X");
+        oBJORTFX.crtSpecularOffX = iui_slider_h(_sliderx3, _UI_CURRENT_Y, oBJORTFX.crtSpecularOffX, _sliderw, -1, 1, "SPECULAR_X");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // green
         iui_label_transform(_sliderx3, _UI_CURRENT_Y + _sliderhalfh, "Y OFF. ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtSpecularOffY = iui_slider_h(_sliderx3, _UI_CURRENT_Y, crtSpecularOffY, _sliderw, -1, 1, "SPECULAR_Y");
+        oBJORTFX.crtSpecularOffY = iui_slider_h(_sliderx3, _UI_CURRENT_Y, oBJORTFX.crtSpecularOffY, _sliderw, -1, 1, "SPECULAR_Y");
         _UI_CURRENT_Y += _UI_MARGIN;
         iui_align_pop();
         break;
@@ -844,25 +514,25 @@ switch (UI_TAB_IDX)
         iui_align_push(fa_right, fa_middle);
         iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "GLOW FACTOR ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtGlowFactor = iui_slider_h(_sliderx1, _UI_CURRENT_Y, crtGlowFactor, _sliderw, 0, 1, "GLOW_AMP");
+        oBJORTFX.crtGlowFactor = iui_slider_h(_sliderx1, _UI_CURRENT_Y, oBJORTFX.crtGlowFactor, _sliderw, 0, 1, "GLOW_AMP");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // glow's colour tint amount
         iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "GLOW TINT ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtGlowTint = iui_slider_h(_sliderx1, _UI_CURRENT_Y, crtGlowTint, _sliderw, 0, 1, "GLOW_TINT");
+        oBJORTFX.crtGlowTint = iui_slider_h(_sliderx1, _UI_CURRENT_Y, oBJORTFX.crtGlowTint, _sliderw, 0, 1, "GLOW_TINT");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // blur size
         iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "BLUR SIZE ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtBlurSize = iui_slider_h(_sliderx1, _UI_CURRENT_Y, crtBlurSize, _sliderw, 0, 32, "BLUR_SZ");
+        oBJORTFX.crtBlurSize = iui_slider_h(_sliderx1, _UI_CURRENT_Y, oBJORTFX.crtBlurSize, _sliderw, 0, 32, "BLUR_SZ");
         _UI_CURRENT_Y += _UI_MARGIN;
         
         // blur zoom amount
         iui_label_transform(_sliderx1, _UI_CURRENT_Y + _sliderhalfh, "BLUR ZOOM ", _strscale, _strscale, 0, UI_ACCENT_COL, _UI_ALPHA);
         _UI_CURRENT_Y += 8 * UIScale;
-        crtBlurZoom = iui_slider_h(_sliderx1, _UI_CURRENT_Y, crtBlurZoom, _sliderw, 0, 1, "BLUR_ZOOM");
+        oBJORTFX.crtBlurZoom = iui_slider_h(_sliderx1, _UI_CURRENT_Y, oBJORTFX.crtBlurZoom, _sliderw, 0, 1, "BLUR_ZOOM");
         _UI_CURRENT_Y += _UI_MARGIN;
         iui_align_pop();
         break;
@@ -901,7 +571,7 @@ iui_end();
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Draw contents into the surface
+            <string>/// Draw contents
 switch (demoState)
 {
     case eDEMO_STATE.DEFAULT:
@@ -909,14 +579,50 @@ switch (demoState)
         
         if (background_exists(demoBGCurrent))
         {
+            draw_clear(c_black);
+            
             var _bgwid = background_get_width(demoBGCurrent);
             var _bghei = background_get_height(demoBGCurrent);
-            var _bgscale = min(surfaceScreenWid / _bgwid, surfaceScreenHei / _bghei);
+            var _bgscale = min(winWid / _bgwid, winHei / _bghei);
             _bgwid *= _bgscale;
             _bghei *= _bgscale;
-            var _bgx = (surfaceScreenWid - _bgwid) * 0.5;
-            var _bgy = (surfaceScreenHei - _bghei) * 0.5;
-            draw_background_ext(demoBGCurrent, _bgx, _bgy, _bgscale, _bgscale, 0, c_white, 1.0);
+            var _bgx = (winWid - _bgwid) * 0.5;
+            var _bgy = (winHei - _bghei) * 0.5;
+            draw_background_stretched(demoBGCurrent, _bgx, _bgy, _bgwid, _bghei);
+        }
+        else
+        {
+            /// Draw default attraction graphics
+            var _tex_dithermap = sprite_get_texture(texBluenoise, 0);
+            
+            shader_set(shd_misc_bg);
+            
+            // Set uniform
+            var _u_time = shader_get_uniform(shd_misc_bg, "uTime");
+            var _u_resolution = shader_get_uniform(shd_misc_bg, "uScreenResolution");
+            var _samp_dither = shader_get_sampler_index(shd_misc_bg, "uBayer");
+            shader_set_uniform_f(_u_time, current_time * 0.001);
+            shader_set_uniform_f(_u_resolution, oBJORTFX.surfaceDownscaledWid, oBJORTFX.surfaceDownscaledHei);
+            texture_set_stage(_samp_dither, _tex_dithermap);
+            
+            // Draw primitive : fullscreen quad for shader based background
+            draw_primitive_begin_texture(pr_trianglestrip, -1);
+            draw_vertex_texture(0, 0, 0, 0);
+            draw_vertex_texture(winWid, 0, 1, 0);
+            draw_vertex_texture(0, winHei, 0, 1);
+            draw_vertex_texture(winWid, winHei, 1, 1);
+            draw_primitive_end();
+            shader_reset();
+            
+            // Draw logo
+            var _logot = current_time * 0.001 * pi;
+            var _logoscale = 2.0 * UIScale;
+            var _logooscampx = winWid * 0.5;
+            var _logooscampy = winHei * 0.5;
+            var _logox = (winWid + cos(_logot) * _logooscampx) * 0.5;
+            var _logoy = (winHei - sin(_logot) * _logooscampy - sprite_get_height(sprLogo) * _logoscale) * 0.5;
+            draw_sprite_ext(sprLogo, 0, _logox + 16, _logoy + 16, _logoscale, _logoscale, sin(_logot) * 4, c_black, 0.5);
+            draw_sprite_ext(sprLogo, 0, _logox, _logoy, _logoscale, _logoscale, sin(_logot) * 4, c_white, 1.0);
         }
         break;
         
@@ -924,11 +630,11 @@ switch (demoState)
         var _bg = demoCustomBG;
         var _bgwid = background_get_width(_bg);
         var _bghei = background_get_height(_bg);
-        var _bgscale = min(surfaceScreenWid / _bgwid, surfaceScreenHei / _bghei);
+        var _bgscale = min(winWid / _bgwid, winHei / _bghei);
         _bgwid *= _bgscale;
         _bghei *= _bgscale;
-        var _bgx = (surfaceScreenWid - _bgwid) * 0.5;
-        var _bgy = (surfaceScreenHei - _bghei) * 0.5;
+        var _bgx = (winWid - _bgwid) * 0.5;
+        var _bgy = (winHei - _bghei) * 0.5;
         draw_background_ext(_bg, _bgx, _bgy, _bgscale, _bgscale, 0, c_white, 1.0);
         break;
 }

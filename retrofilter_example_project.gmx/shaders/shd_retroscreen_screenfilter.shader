@@ -48,21 +48,22 @@ uniform sampler2D uTexNoise;    // noise texture
 uniform sampler2D uTexShadowmask; // shadow mask for CRT effect
 // uniform sampler2D uTexRainbow;  // RGB tint lookup texture for hacky chromatic aberration effect
 
-uniform vec2 uScreenTexelSize;  // size of single texel on surface that's being drawn
+uniform vec2 uScreenTexelSize;  // size of single texel on surface that's being drawn to
+uniform vec2 uScaledScreenTexelSize;  // size of single texel on (scaled) surface that's being drawn
 uniform vec2 uNoiseTexelSize;   // size of single texel on noise texture
 uniform vec2 uShadowmaskTexelSize; // size of single texel on shadow mask texture
 
 // Samples noise texture from given uv and returns float with range of [0..1]
 float noise (vec2 uv)
 {
-    return texture2D(uTexNoise, fract(uv / uScreenTexelSize * uNoiseTexelSize + vec2(uTime * 32.0))).r;
+    return texture2D(uTexNoise, fract(floor(uv / uScreenTexelSize) * uNoiseTexelSize + vec2(uTime * 32.0))).r;
 }
 
 // Samples shadow mask texture from given uv
 vec3 sampleShadowmask (vec2 uv)
 {
     const float shadowmaskuvscale = 6.0;
-    return mix(vec3(1.0), texture2D(uTexShadowmask, fract(uv / uScreenTexelSize * uShadowmaskTexelSize * shadowmaskuvscale)).rgb, uShadowmaskIntensity);
+    return mix(vec3(1.0), texture2D(uTexShadowmask, fract(uv / uScaledScreenTexelSize * uShadowmaskTexelSize * shadowmaskuvscale)).rgb, uShadowmaskIntensity);
 }
 
 // Samples rainbow tint
@@ -129,7 +130,7 @@ void main()
     final *= rainbowtint;
     
     /// Apply scanline and shadowmask effect
-    float scanlinenum   = (1.0 / uScreenTexelSize.y) / 4.0;
+    float scanlinenum   = (1.0 / uScaledScreenTexelSize.y) / 4.0;
     float scanline      = mix(1.0 - uScanlineIntensity, 1.0, abs(0.5 - fract(uv.y * scanlinenum)) * 2.0);
     vec3 shadowmask     = sampleShadowmask(uv);
     final *= shadowmask * scanline;

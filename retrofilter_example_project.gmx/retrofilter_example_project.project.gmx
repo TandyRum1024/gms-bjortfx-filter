@@ -5,18 +5,21 @@
   </Configs>
   <NewExtensions>
     <extension index="0">extensions\ImNotGUI</extension>
+    <extension index="1">extensions\BJÖRTFX</extension>
   </NewExtensions>
   <sounds name="sound"/>
   <sprites name="sprites">
-    <sprite>sprites\sprLogo</sprite>
-    <sprite>sprites\texShadowMask</sprite>
-    <sprite>sprites\texBluenoise</sprite>
-    <sprite>sprites\texRainbowLUT</sprite>
-    <sprite>sprites\texTwister</sprite>
+    <sprites name="BJORTFX_TEXTURES">
+      <sprite>sprites\texShadowMask</sprite>
+      <sprite>sprites\texRainbowLUT</sprite>
+      <sprite>sprites\texBluenoise</sprite>
+    </sprites>
     <sprites name="imnotgui">
       <sprite>sprites\spr_uicheck</sprite>
       <sprite>sprites\spr_uiwhitepixel</sprite>
     </sprites>
+    <sprite>sprites\sprLogo</sprite>
+    <sprite>sprites\texTwister</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bgTest1</background>
@@ -66,9 +69,11 @@
     </scripts>
   </scripts>
   <shaders name="shaders">
-    <shader type="GLSLES">shaders\shd_retroscreen_screenfilter.shader</shader>
-    <shader type="GLSLES">shaders\shd_retroscreen_distortion.shader</shader>
-    <shader type="GLSLES">shaders\shd_retroscreen_postprocessing.shader</shader>
+    <shaders name="BJORTFX_SHADERS">
+      <shader type="GLSLES">shaders\shd_retroscreen_screenfilter.shader</shader>
+      <shader type="GLSLES">shaders\shd_retroscreen_postprocessing.shader</shader>
+      <shader type="GLSLES">shaders\shd_retroscreen_distortion.shader</shader>
+    </shaders>
     <shader type="GLSLES">shaders\shd_misc_bg.shader</shader>
   </shaders>
   <fonts name="fonts">
@@ -76,6 +81,7 @@
   </fonts>
   <objects name="objects">
     <object>objects\oKNT</object>
+    <object>objects\oBJORTFX</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_test</room>
