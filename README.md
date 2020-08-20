@@ -27,6 +27,16 @@ EDIT : Thanks to @dev-dwarf, the project has been FLAWLESSLY ported to GMS2!
 
 If you have any questions and problems regarding this project, feel free to contact me via my discord account : `zik#6629`... I'll try my best to help.
 
+:question: How to use
+====
+This project includes the extension that contains various textures and shaders that is needed for the filter effect, and an object `oBJORTFX` that will handle applying the filter.
+
+The most straightforward way to apply the filter is to import all the assets in the extension and create an instance of `oBJORTFX` in any object. (This needs to be done once, so you'd probably better spawn them in your controller object's create event.)
+
+Then, the object `oBJORTFX` will automatically apply a downscale effect (this can be adjusted via the variable `surfaceDownscaleFactor` in the object) and other filter effects on the `application_surface` on the draw GUI event.
+
+You can modify the variables in the filter handler object to adjust the filter's visuals to your taste.
+
 # :wrench: Technical rundown / shader explaination
 ## Pass #0 : Original image before applying the FX
 ![pass0](pics/pass_original.png)
