@@ -5,6 +5,7 @@
   </Configs>
   <NewExtensions>
     <extension index="0">extensions\ImNotGUI</extension>
+    <extension index="1">extensions\BJORTFX</extension>
   </NewExtensions>
   <sounds name="sound"/>
   <sprites name="sprites">
