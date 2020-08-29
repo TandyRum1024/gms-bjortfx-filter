@@ -35,6 +35,7 @@ winWid = 800;
 winHei = 600;
 winTargetW = 800;
 winTargetH = 600;
+effectsSurface = surface_create(winWid, winHei);
 
 /// Create shader FX handler
 instance_create(0, 0, oBJORTFX);
@@ -139,6 +140,35 @@ if ((_winwid != winWid ||
         <arguments>
           <argument>
             <kind>1</kind>
+            <string>/// Update surface
+if (surface_get_width(effectsSurface) != winWid || surface_get_height(effectsSurface) != winHei ||
+    !surface_exists(effectsSurface))
+{
+    if (surface_exists(effectsSurface))
+        surface_free(effectsSurface);
+    
+    effectsSurface = surface_create(winWid, winHei);
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
             <string>/// Update UI
 iui_update_io();
 
@@ -150,6 +180,31 @@ if (UIMsgCtr &gt; 0)
       </action>
     </event>
     <event eventtype="8" enumb="75">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Stop capturing the screen &amp; draw it
+surface_reset_target();
+
+draw_surface_stretched(effectsSurface, 0, 0, winWid, winHei);
+
+</string>
+          </argument>
+        </arguments>
+      </action>
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -269,7 +324,7 @@ switch (UI_TAB_IDX)
             var _dir = get_save_filename_ext(".PNG image file|*.png", "", working_directory, "Save image to where?");
             if (_dir != "")
             {
-                surface_save(surfacePPTemp3, _dir);
+                surface_save(effectsSurface, _dir);
                 UIMsg = "IMAGE EXPORTED!";
                 UIMsgCtr = room_speed * 3.0;
             }
@@ -548,6 +603,31 @@ if (UIMsgCtr &gt; 0)
 }
 
 iui_end();
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="74">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Begin capturing the screen with filter applied
+surface_set_target(effectsSurface);
 
 </string>
           </argument>
